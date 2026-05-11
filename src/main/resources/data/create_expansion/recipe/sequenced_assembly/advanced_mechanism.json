@@ -1,0 +1,64 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "create:precision_mechanism"
+  },
+  "results": [
+    {
+      "id": "create_expansion:advanced_mechanism"
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_expansion:incomplete_advanced_mechanism"
+        },
+        {
+          "tag": "c:plates/iron"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_expansion:incomplete_advanced_mechanism"
+        }
+      ]
+    },
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_expansion:incomplete_advanced_mechanism"
+        },
+        {
+          "tag": "c:plates/brass"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_expansion:incomplete_advanced_mechanism"
+        }
+      ]
+    },
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_expansion:incomplete_advanced_mechanism"
+        },
+        {
+          "item": "create:polished_rose_quartz"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_expansion:incomplete_advanced_mechanism"
+        }
+      ]
+    }
+  ],
+  "transitional_item": {
+    "id": "create_expansion:incomplete_advanced_mechanism"
+  }
+}
