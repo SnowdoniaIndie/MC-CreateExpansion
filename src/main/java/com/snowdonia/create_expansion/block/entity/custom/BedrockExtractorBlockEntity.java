@@ -30,6 +30,8 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public class BedrockExtractorBlockEntity extends BlockEntity implements MenuProvider {
 
     /** Number of inventory slots. */
@@ -119,20 +121,42 @@ public class BedrockExtractorBlockEntity extends BlockEntity implements MenuProv
 
         be.progress++;
         if (be.progress >= GENERATE_INTERVAL) {
-            be.progress = 0;
-            be.produceLoot((ServerLevel) level);
-            be.setChanged();
+            // Cycle complete: try to output. If the result won't fit, hold the finished
+            // state (progress pinned at the interval) and retry next tick instead of
+            // discarding anything — the machine pauses until space frees up.
+            if (be.produceLoot((ServerLevel) level)) {
+                be.progress = 0;
+                be.setChanged();
+            } else {
+                be.progress = GENERATE_INTERVAL;
+            }
         }
     }
 
-    // Rolls the loot table once and inserts whatever it produced.
-    // Anything that doesn't fit (inventory full) is simply discarded.
-    private void produceLoot(ServerLevel level) {
+    // Rolls the loot table once and inserts the result, but only if all of it fits.
+    // Returns true when the roll was stored (or was empty); false when the inventory
+    // couldn't hold the whole result, in which case nothing is inserted.
+    private boolean produceLoot(ServerLevel level) {
         LootTable lootTable = level.getServer().reloadableRegistries().getLootTable(LOOT_TABLE);
         LootParams params = new LootParams.Builder(level).create(LootContextParamSets.EMPTY);
-        for (ItemStack stack : lootTable.getRandomItems(params)) {
+        List<ItemStack> rolled = lootTable.getRandomItems(params);
+
+        // Simulate against a copy of the inventory so we only commit when everything fits.
+        ItemStackHandler simulation = new ItemStackHandler(inventory.getSlots());
+        for (int slot = 0; slot < inventory.getSlots(); slot++) {
+            simulation.setStackInSlot(slot, inventory.getStackInSlot(slot).copy());
+        }
+        for (ItemStack stack : rolled) {
+            if (!ItemHandlerHelper.insertItem(simulation, stack.copy(), false).isEmpty()) {
+                return false;
+            }
+        }
+
+        // The whole roll fits — insert it into the real inventory.
+        for (ItemStack stack : rolled) {
             ItemHandlerHelper.insertItem(inventory, stack, false);
         }
+        return true;
     }
 
     // True when the block directly below is bedrock.

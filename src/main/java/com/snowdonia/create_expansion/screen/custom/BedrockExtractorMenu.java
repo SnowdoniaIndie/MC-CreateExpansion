@@ -42,7 +42,13 @@ public class BedrockExtractorMenu extends AbstractContainerMenu {
         // bottom storage row (y=52).
         IItemHandler handler = blockEntity.getInventory();
         for (int slot = 0; slot < EXTRACTOR_SLOT_COUNT; slot++) {
-            this.addSlot(new SlotItemHandler(handler, slot, 8 + slot * 18, 52));
+            // Output-only slots: the player can take items out but never place any in.
+            this.addSlot(new SlotItemHandler(handler, slot, 8 + slot * 18, 52) {
+                @Override
+                public boolean mayPlace(ItemStack stack) {
+                    return false;
+                }
+            });
         }
 
         addPlayerInventory(playerInventory);
@@ -102,10 +108,8 @@ public class BedrockExtractorMenu extends AbstractContainerMenu {
                     return ItemStack.EMPTY;
                 }
             } else {
-                // Moving from the player's inventory into the extractor.
-                if (!this.moveItemStackTo(rawStack, 0, EXTRACTOR_SLOT_COUNT, false)) {
-                    return ItemStack.EMPTY;
-                }
+                // The extractor is output-only, so the player can never shift items into it.
+                return ItemStack.EMPTY;
             }
 
             if (rawStack.isEmpty()) {
