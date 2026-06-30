@@ -22,6 +22,10 @@ public class Mod_CreativeTabs
     public static final Supplier<CreativeModeTab> BLACK_OPAL_ITEMS_TAB = CREATIVE_MODE_TABS.register("black_opal_items_tab", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.create_expansion"))
             .icon(() -> new ItemStack(Mod_Items.ITEM_ADVANCED_MECHANISM.get()))
-            .displayItems((itemDisplayParameters, output) -> output.accept(Mod_Items.ITEM_ADVANCED_MECHANISM))
+            .displayItems((itemDisplayParameters, output) -> {
+                output.accept(Mod_Items.ITEM_ADVANCED_MECHANISM);
+                output.accept(Mod_Items.ITEM_WATER_STRAINER);
+                output.accept(Mod_Items.ITEM_BEDROCK_EXTRACTOR);
+            })
             .build());
 }

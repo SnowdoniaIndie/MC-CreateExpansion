@@ -2,5 +2,13 @@
   "itemGroup.create_expansion": "Create Expansion",
 
   "item.create_expansion.advanced_mechanism": "Advanced Mechanism",
-  "item.create_expansion.incomplete_advanced_mechanism": "Incomplete Advanced Mechanism"
+  "item.create_expansion.incomplete_advanced_mechanism": "Incomplete Advanced Mechanism",
+
+  "block.create_expansion.water_strainer": "Water Strainer",
+  "block.create_expansion.bedrock_extractor": "Bedrock Extractor",
+
+  "create_expansion.jei.category.water_strainer": "Water Strainer",
+  "create_expansion.jei.water_strainer.chance": "Chance: %s%%",
+  "create_expansion.jei.category.bedrock_extractor": "Bedrock Extractor",
+  "create_expansion.jei.bedrock_extractor.chance": "Chance: %s%%"
 }

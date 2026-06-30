@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "create_expansion:block/water_strainer" }
+  }
+}
