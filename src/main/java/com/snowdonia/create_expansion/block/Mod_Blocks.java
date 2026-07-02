@@ -2,6 +2,7 @@ package com.snowdonia.create_expansion.block;
 
 import com.snowdonia.create_expansion.CreateExpansion;
 import com.snowdonia.create_expansion.block.custom.BedrockExtractorBlock;
+import com.snowdonia.create_expansion.block.custom.ReverseMotorBlock;
 import com.snowdonia.create_expansion.block.custom.WaterStrainerBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -30,6 +31,15 @@ public class Mod_Blocks {
     public static final DeferredBlock<BedrockExtractorBlock> BEDROCK_EXTRACTOR = REGISTER_BLOCKS.registerBlock(
             "bedrock_extractor",
             BedrockExtractorBlock::new,
+            BlockBehaviour.Properties.of()
+                    .strength(2.0f)
+                    .sound(SoundType.METAL)
+                    .requiresCorrectToolForDrops()
+    );
+
+    public static final DeferredBlock<ReverseMotorBlock> REVERSE_MOTOR = REGISTER_BLOCKS.registerBlock(
+            "reverse_motor",
+            ReverseMotorBlock::new,
             BlockBehaviour.Properties.of()
                     .strength(2.0f)
                     .sound(SoundType.METAL)

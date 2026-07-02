@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.snowdonia.create_expansion.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "AnimatedBlazeBurnerMixin",
+    "BasinCategoryMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

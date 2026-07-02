@@ -6,6 +6,7 @@
 
   "block.create_expansion.water_strainer": "Water Strainer",
   "block.create_expansion.bedrock_extractor": "Bedrock Extractor",
+  "block.create_expansion.reverse_motor": "Reverse Motor",
 
   "create_expansion.jei.category.water_strainer": "Water Strainer",
   "create_expansion.jei.water_strainer.chance": "Chance: %s%%",

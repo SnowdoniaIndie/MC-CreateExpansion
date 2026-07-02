@@ -26,6 +26,7 @@ public class Mod_CreativeTabs
                 output.accept(Mod_Items.ITEM_ADVANCED_MECHANISM);
                 output.accept(Mod_Items.ITEM_WATER_STRAINER);
                 output.accept(Mod_Items.ITEM_BEDROCK_EXTRACTOR);
+                output.accept(Mod_Items.ITEM_REVERSE_MOTOR);
             })
             .build());
 }

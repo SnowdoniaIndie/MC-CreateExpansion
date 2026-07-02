@@ -24,6 +24,11 @@ repositories {
     maven { url = "https://modmaven.dev" } //JEI Fallback
     maven { url = "https://maven.createmod.net" } // Create, Ponder, Flywheel
     maven { url = "https://maven.ithundxr.dev/snapshots" } // Registrate
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content { includeGroup "maven.modrinth" } // only resolve maven.modrinth artifacts here
+    }
 }
 
 base {
@@ -88,6 +93,11 @@ dependencies {
     compileOnly("dev.engine-room.flywheel:flywheel-neoforge-api-${minecraft_version}:${flywheel_version}")
     runtimeOnly("dev.engine-room.flywheel:flywheel-neoforge-${minecraft_version}:${flywheel_version}")
     implementation("com.tterrag.registrate:Registrate:${registrate_version}")
+
+    // Test-only: EnderIO provides FE machines, conduits and capacitor banks to verify the
+    // Reverse Motor's future Forge Energy output in-dev. localRuntime keeps it out of the
+    // published jar (see the runtimeClasspath.extendsFrom localRuntime below).
+    localRuntime("maven.modrinth:enderio:${enderio_version}")
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {

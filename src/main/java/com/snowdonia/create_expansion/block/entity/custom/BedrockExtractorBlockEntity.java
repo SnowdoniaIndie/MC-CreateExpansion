@@ -2,6 +2,7 @@ package com.snowdonia.create_expansion.block.entity.custom;
 
 import com.snowdonia.create_expansion.CreateExpansion;
 import com.snowdonia.create_expansion.block.entity.Mod_BlockEntities;
+import com.snowdonia.create_expansion.config.Mod_Config;
 import com.snowdonia.create_expansion.screen.custom.BedrockExtractorMenu;
 import com.snowdonia.create_expansion.util.ExtractOnlyItemHandler;
 import net.minecraft.core.BlockPos;
@@ -30,14 +31,10 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 public class BedrockExtractorBlockEntity extends BlockEntity implements MenuProvider {
 
     /** Number of inventory slots. */
     public static final int INVENTORY_SIZE = 9;
-    /** 20 ticks = 1 second, so 200 ticks = 10 seconds. */
-    private static final int GENERATE_INTERVAL = 200;
     /** Loot table rolled to decide what the extractor produces. Lives at
      *  data/create_expansion/loot_table/gameplay/bedrock_extractor.json */
     private static final ResourceKey<LootTable> LOOT_TABLE = ResourceKey.create(
@@ -65,7 +62,7 @@ public class BedrockExtractorBlockEntity extends BlockEntity implements MenuProv
         public int get(int index) {
             return switch (index) {
                 case 0 -> progress;
-                case 1 -> GENERATE_INTERVAL;
+                case 1 -> processingTicks();
                 default -> 0;
             };
         }
@@ -120,43 +117,26 @@ public class BedrockExtractorBlockEntity extends BlockEntity implements MenuProv
         }
 
         be.progress++;
-        if (be.progress >= GENERATE_INTERVAL) {
-            // Cycle complete: try to output. If the result won't fit, hold the finished
-            // state (progress pinned at the interval) and retry next tick instead of
-            // discarding anything — the machine pauses until space frees up.
-            if (be.produceLoot((ServerLevel) level)) {
-                be.progress = 0;
-                be.setChanged();
-            } else {
-                be.progress = GENERATE_INTERVAL;
-            }
+        if (be.progress >= processingTicks()) {
+            be.progress = 0;
+            be.produceLoot((ServerLevel) level);
+            be.setChanged();
         }
     }
 
-    // Rolls the loot table once and inserts the result, but only if all of it fits.
-    // Returns true when the roll was stored (or was empty); false when the inventory
-    // couldn't hold the whole result, in which case nothing is inserted.
-    private boolean produceLoot(ServerLevel level) {
+    /** Ticks per production cycle, read live from the server config. */
+    private static int processingTicks() {
+        return Mod_Config.BEDROCK_EXTRACTOR_PROCESSING_TICKS.get();
+    }
+
+    // Rolls the loot table once and inserts whatever it produced.
+    // Anything that doesn't fit (inventory full) is simply discarded.
+    private void produceLoot(ServerLevel level) {
         LootTable lootTable = level.getServer().reloadableRegistries().getLootTable(LOOT_TABLE);
         LootParams params = new LootParams.Builder(level).create(LootContextParamSets.EMPTY);
-        List<ItemStack> rolled = lootTable.getRandomItems(params);
-
-        // Simulate against a copy of the inventory so we only commit when everything fits.
-        ItemStackHandler simulation = new ItemStackHandler(inventory.getSlots());
-        for (int slot = 0; slot < inventory.getSlots(); slot++) {
-            simulation.setStackInSlot(slot, inventory.getStackInSlot(slot).copy());
-        }
-        for (ItemStack stack : rolled) {
-            if (!ItemHandlerHelper.insertItem(simulation, stack.copy(), false).isEmpty()) {
-                return false;
-            }
-        }
-
-        // The whole roll fits — insert it into the real inventory.
-        for (ItemStack stack : rolled) {
+        for (ItemStack stack : lootTable.getRandomItems(params)) {
             ItemHandlerHelper.insertItem(inventory, stack, false);
         }
-        return true;
     }
 
     // True when the block directly below is bedrock.

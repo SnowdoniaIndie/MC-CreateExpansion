@@ -3,6 +3,7 @@ package com.snowdonia.create_expansion.block.entity;
 import com.snowdonia.create_expansion.CreateExpansion;
 import com.snowdonia.create_expansion.block.Mod_Blocks;
 import com.snowdonia.create_expansion.block.entity.custom.BedrockExtractorBlockEntity;
+import com.snowdonia.create_expansion.block.entity.custom.ReverseMotorBlockEntity;
 import com.snowdonia.create_expansion.block.entity.custom.WaterStrainerBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -32,5 +33,12 @@ public class Mod_BlockEntities {
                     () -> BlockEntityType.Builder.of(
                             BedrockExtractorBlockEntity::new,
                             Mod_Blocks.BEDROCK_EXTRACTOR.get()
+                    ).build(null));
+
+    public static final Supplier<BlockEntityType<ReverseMotorBlockEntity>> REVERSE_MOTOR_BE =
+            REGISTER_BLOCK_ENTITIES.register("reverse_motor",
+                    () -> BlockEntityType.Builder.of(
+                            ReverseMotorBlockEntity::new,
+                            Mod_Blocks.REVERSE_MOTOR.get()
                     ).build(null));
 }

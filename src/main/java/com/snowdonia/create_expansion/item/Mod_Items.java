@@ -26,4 +26,7 @@ public class Mod_Items
 
     // The placeable item form of the Bedrock Extractor block.
     public static final DeferredItem<BlockItem> ITEM_BEDROCK_EXTRACTOR = REGISTER_ITEMS.registerSimpleBlockItem(Mod_Blocks.BEDROCK_EXTRACTOR);
+
+    // The placeable item form of the Reverse Motor block.
+    public static final DeferredItem<BlockItem> ITEM_REVERSE_MOTOR = REGISTER_ITEMS.registerSimpleBlockItem(Mod_Blocks.REVERSE_MOTOR);
 }

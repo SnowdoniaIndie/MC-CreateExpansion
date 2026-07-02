@@ -1,5 +1,6 @@
 package com.snowdonia.create_expansion.event;
 
+import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
 import com.snowdonia.create_expansion.block.entity.Mod_BlockEntities;
 import net.minecraft.core.Direction;
 import net.neoforged.bus.api.IEventBus;
@@ -28,9 +29,22 @@ public class Mod_Capabilities {
         event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
                 Mod_BlockEntities.BEDROCK_EXTRACTOR_BE.get(),
-                (blockEntity, side) -> (side == Direction.UP || side == Direction.DOWN)
+                // The extractor rests on bedrock, so every face except the bottom (and the
+                // null "any" side) exposes the extract-only view: top and all four sides.
+                (blockEntity, side) -> (side != null && side != Direction.DOWN)
                         ? blockEntity.getExtractOnlyInventory()
                         : null
+        );
+
+        // The Reverse Motor exposes its energy buffer on every face except the shaft face
+        // (where the FACING shaft connects). The null "any" side exposes it too.
+        event.registerBlockEntity(
+                Capabilities.EnergyStorage.BLOCK,
+                Mod_BlockEntities.REVERSE_MOTOR_BE.get(),
+                (blockEntity, side) -> (side != null
+                        && side == blockEntity.getBlockState().getValue(DirectionalKineticBlock.FACING))
+                        ? null
+                        : blockEntity.getEnergyStorage()
         );
     }
 }

@@ -2,6 +2,10 @@ modLoader="javafml"
 loaderVersion="${loader_version_range}"
 license="${mod_license}"
 
+# Mixin configs applied by this mod.
+[[mixins]]
+config="create_expansion.mixins.json"
+
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
